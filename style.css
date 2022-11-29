@@ -1,0 +1,35 @@
+.page-container {
+    display: grid;
+    justify-content: stretch;
+    align-items: stretch;
+    grid-template-rows: 1fr 2fr 1fr;
+}
+
+.header {
+    grid-row: 1 / 2;
+    display: flex;
+    justify-content: center;
+
+}
+
+.gameboard {
+    grid-row: 2 / 3;
+    display: grid;
+    grid-template-columns: repeat(3 , 150px);
+    grid-template-rows: repeat(3 , 150px);
+
+    justify-content: center;
+}
+
+.cell {
+    width: 150px;
+    height: 150px;
+    border: 2px solid black;
+}
+
+.footer {
+    grid-row: 3 / 4;
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+}
