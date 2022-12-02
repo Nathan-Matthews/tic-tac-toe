@@ -3,11 +3,17 @@ const Gameboard = (() => {
     let gameboard = ["","","",
                     "","","",
                     "","",""];
+    let _turnCounter = 0;
+
     // Runs when a tile is clicked.
     const gameboardMove = (cellID) => {
 
+        // Check if a player has already made a move in that spot.
+        if(gameboard[cellID - 1] == "X" || gameboard[cellID - 1] == "O"){
+            return;
+        }
         // Check who's turn, place the shape, then switch turns.
-        if(playerOne.playerTurn){
+        else if(playerOne.playerTurn){
             gameboard[cellID - 1] = "X";
             playerOne.playerTurn = false;
             playerTwo.playerTurn = true;
@@ -17,7 +23,51 @@ const Gameboard = (() => {
             playerOne.playerTurn = true;
             playerTwo.playerTurn = false;
         }
+        _turnCounter++;
+        // Start checking for wins only after the 5th turn has been played.
+        if(_turnCounter >= 5){
+            _checkWin();
+        }
         displayController.updateDisplay(gameboard);
+    }
+
+    const _checkWin = () => {
+        for(let i = 0; i <= 6; i++){
+            // Check for wins in Rows
+            if(i == 0 || i == 3 || i == 6){
+                if(gameboard[i] == gameboard[i + 1] && gameboard[i] == gameboard[i + 2]){
+                    if(gameboard[i] == ""){
+                        continue;
+                    }
+                    document.querySelector(".header").textContent = gameboard[i] + " has won!"
+                }
+            }
+            // Check for wins in Columns
+            if(i == 0 || i == 1 || i == 2){
+                if(gameboard[i] == gameboard[i + 3] && gameboard[i] == gameboard[i + 6]){
+                    if(gameboard[i] == ""){
+                        continue;
+                    }
+                    document.querySelector(".header").textContent = gameboard[i] + " has won!"
+                }
+            }
+        }
+        // Check backslash diagonal wins
+        if(gameboard[0] == gameboard[4] && gameboard[0] == gameboard[8]){
+            if(gameboard[0] != ""){
+                document.querySelector(".header").textContent = gameboard[0] + " has won!"
+            }
+        }
+        // Check frontslash diagonal wins
+        if(gameboard[2] == gameboard[4] && gameboard[0] == gameboard[6]){
+            if(gameboard[2] != ""){
+                document.querySelector(".header").textContent = gameboard[2] + " has won!"
+            }
+        }
+        // After the 9th turn and after checking for a win, it must be a tie.
+        if(_turnCounter >= 9){
+            document.querySelector(".header").textContent = "There has been a tie."
+        }
     }
     
     return {gameboard, gameboardMove};
@@ -44,7 +94,6 @@ const displayController = (() => {
         // Once a cell is clicked, send that cell number and record the player shape.
         document.querySelectorAll('.cell').forEach(item => {
             item.addEventListener('click', event => {
-                console.log(item.className.slice(-1));
                 Gameboard.gameboardMove(item.className.slice(-1));
             })
           })
@@ -86,18 +135,17 @@ const displayController = (() => {
 // Player factory for the players
 const playerFactory = (name, shape) => {
     let playerTurn = false;
+    let hasWon = false;
     if(name == 1){
         playerTurn = true;
     }
-    return {name, shape, playerTurn};
+    return {name, shape, playerTurn, hasWon};
 };
 
-// Initialize the players and the game.
+// Initialize the players and the display.
 const playerOne = playerFactory(1,"X");
 const playerTwo = playerFactory(2,"O");
 displayController.initializeDisplay();
-
-displayController.updateDisplay(Gameboard.gameboard);
 
 // TODO: make the selectable options appear in a popup on page load
 // Then once those selections are made, the popup disappears and shows the board.
