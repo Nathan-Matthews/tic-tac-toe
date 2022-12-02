@@ -79,8 +79,6 @@ const Gameboard = (() => {
     // Called once a winning set has been found.
     const _hasWon = (shape) => {
         document.querySelector(".header").textContent = shape + " has won!";
-        console.log(shape);
-        console.log(playerOne.shape)
         if(shape == playerOne.shape){
             playerOne.hasWon = true;
         }
@@ -166,5 +164,19 @@ const playerOne = playerFactory(1,"X");
 const playerTwo = playerFactory(2,"O");
 displayController.initializeDisplay();
 
-// TODO: make the selectable options appear in a popup on page load
-// Then once those selections are made, the popup disappears and shows the board.
+// TODO: make the "difficulty" be selectable once "AI" is selected.
+// set selected options to variables in the code.
+
+const openButton = document.getElementById('trigger-modal');
+const closeButton = document.getElementById('close-modal');
+
+function toggleModal() {
+  const modalDiv = document.querySelector('.popup-modal');
+  modalDiv.classList.toggle('show');
+}
+
+closeButton.addEventListener('click', toggleModal);
+
+
+// Open Modal on page load
+toggleModal();

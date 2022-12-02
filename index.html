@@ -10,9 +10,32 @@
 </head>
 <body>
     <div class="page-container">
+        <div class="popup-modal">
+            <form>
+                <h4>Select the shape you would like to use:</h4>
+                <input type="radio" id="x" name="shape" value="X" checked>
+                <label for="x">X</label><br>
+                <input type="radio" id="o" name="shape" value="O">
+                <label for="o">O</label><br>
+                <h4>Who will be your opponent?</h4>
+                <input type="radio" id="player" name="opponentType" value="Player" checked>
+                <label for="player">Player</label><br>
+                <input type="radio" id="ai" name="opponentType" value="AI">
+                <label for="ai">AI</label><br>
+                <h3>What difficulty would you like the AI to be?</h3>
+                <input type="radio" id="easy" name="difficulty" value="Easy" disabled>
+                <label for="easy">Easy</label><br>
+                <input type="radio" id="medium" name="difficulty" value="Medium" disabled>
+                <label for="medium">Medium</label><br>
+                <input type="radio" id="hard" name="difficulty" value="Hard" disabled>
+                <label for="hard">Hard</label><br>
+            </form>
+            <button id="close-modal">Close Modal</button>
+          </div>
         <header class="header">
             <h1>Ultimate Tic-Tac-Toe</h1>
         </header>
+
 
         <div class="gameboard">
 

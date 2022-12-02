@@ -15,8 +15,8 @@
 .gameboard {
     grid-row: 2 / 3;
     display: grid;
-    grid-template-columns: repeat(3 , 150px);
-    grid-template-rows: repeat(3 , 150px);
+    grid-template-columns: repeat(3, 150px);
+    grid-template-rows: repeat(3, 150px);
 
     justify-content: center;
 }
@@ -30,6 +30,54 @@
     width: 150px;
     height: 150px;
     border: 2px solid black;
+}
+
+.popup-modal {
+    padding: 32px 64px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0%;
+    text-align: start;
+    transition: transform .3s ease-in-out, opacity .4s ease;
+    transform: translate(-50%, -100%);
+}
+
+.popup-modal h4 {
+    margin-bottom: 24px
+}
+
+.popup-modal h3 {
+    text-decoration: line-through;
+}
+
+.popup-modal button {
+    margin-top: 24px;
+    padding: 16px;
+}
+
+.backdrop {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0%;
+}
+
+.popup-modal.show {
+    opacity: 100%;
+    pointer-events: all;
+    transform: translate(-50%, -50%);
+}
+
+.backdrop.show {
+    opacity: 30%;
 }
 
 .footer {
