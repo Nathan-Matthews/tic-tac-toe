@@ -8,10 +8,16 @@ const Gameboard = (() => {
     // Runs when a tile is clicked.
     const gameboardMove = (cellID) => {
 
+        //Disables moves after a player has won.
+        if(playerOne.hasWon || playerTwo.hasWon){
+            return;
+        }
+
         // Check if a player has already made a move in that spot.
         if(gameboard[cellID - 1] == "X" || gameboard[cellID - 1] == "O"){
             return;
         }
+
         // Check who's turn, place the shape, then switch turns.
         else if(playerOne.playerTurn){
             gameboard[cellID - 1] = "X";
@@ -39,7 +45,7 @@ const Gameboard = (() => {
                     if(gameboard[i] == ""){
                         continue;
                     }
-                    document.querySelector(".header").textContent = gameboard[i] + " has won!"
+                    _hasWon(gameboard[i]);
                 }
             }
             // Check for wins in Columns
@@ -48,25 +54,38 @@ const Gameboard = (() => {
                     if(gameboard[i] == ""){
                         continue;
                     }
-                    document.querySelector(".header").textContent = gameboard[i] + " has won!"
+                    _hasWon(gameboard[i]);
                 }
             }
         }
         // Check backslash diagonal wins
         if(gameboard[0] == gameboard[4] && gameboard[0] == gameboard[8]){
             if(gameboard[0] != ""){
-                document.querySelector(".header").textContent = gameboard[0] + " has won!"
+                _hasWon(gameboard[0]);
             }
         }
         // Check frontslash diagonal wins
         if(gameboard[2] == gameboard[4] && gameboard[0] == gameboard[6]){
             if(gameboard[2] != ""){
-                document.querySelector(".header").textContent = gameboard[2] + " has won!"
+                _hasWon(gameboard[2]);
             }
         }
         // After the 9th turn and after checking for a win, it must be a tie.
         if(_turnCounter >= 9){
             document.querySelector(".header").textContent = "There has been a tie."
+        }
+    }
+
+    // Called once a winning set has been found.
+    const _hasWon = (shape) => {
+        document.querySelector(".header").textContent = shape + " has won!";
+        console.log(shape);
+        console.log(playerOne.shape)
+        if(shape == playerOne.shape){
+            playerOne.hasWon = true;
+        }
+        else{
+            playerTwo.hasWon = true;
         }
     }
     
