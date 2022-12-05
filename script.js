@@ -30,11 +30,29 @@ const Gameboard = (() => {
             playerTwo.playerTurn = false;
         }
         _turnCounter++;
+        // If it is BOTH the AI and the AI's turn, then do an aiMove
+        if((playerOne.playerTurn && playerOne.isAI || playerTwo.playerTurn && playerTwo.isAI)){
+            aiMove();
+        }
         // Start checking for wins only after the 5th turn has been played.
         if(_turnCounter >= 5){
             _checkWin();
         }
         displayController.updateDisplay(gameboard);
+    }
+
+    const aiMove = () => {
+        let move = _getRandomInt(9);
+
+        //Checks to make sure a valid move succeeded.
+        let checkCounter = _turnCounter + 1;
+        while(checkCounter > _turnCounter){
+            gameboardMove(move);
+            move = _getRandomInt(9);
+        }
+    }
+    const _getRandomInt = (max) => {
+        return Math.floor(Math.random() * max) + 1;
     }
 
     const _checkWin = () => {
@@ -65,7 +83,7 @@ const Gameboard = (() => {
             }
         }
         // Check frontslash diagonal wins
-        if(gameboard[2] == gameboard[4] && gameboard[0] == gameboard[6]){
+        if(gameboard[2] == gameboard[4] && gameboard[2] == gameboard[6]){
             if(gameboard[2] != ""){
                 _hasWon(gameboard[2]);
             }
@@ -87,7 +105,63 @@ const Gameboard = (() => {
         }
     }
     
-    return {gameboard, gameboardMove};
+    return {gameboard, gameboardMove, aiMove};
+})();
+
+// Driver for the settings that a player chooses on page load.
+const settings = (() => {
+
+    const closeButton = document.getElementById('close-modal');
+    // Default parameter choices.
+    let playerChoice = "X"
+    let playerOpponent = "Player"
+    let aiDifficulty = "Easy"
+    
+    const openModal = () => {
+      const modalDiv = document.querySelector('.popup-modal');
+      modalDiv.classList.toggle('show');
+    }
+    
+    // Steps taken when the modal is closed
+    const closeModal = () => {
+        const modalDiv = document.querySelector('.popup-modal');
+        modalDiv.classList.toggle('show');
+    
+        // Select the form
+        oForm = document.forms[0];
+        if(oForm.elements["shape"].value == "O"){
+            settings.playerChoice = "O"
+        }
+        if(oForm.elements["opponentType"].value == "AI"){
+            settings.playerOpponent = "AI"
+            if(settings.playerChoice=="O"){
+                playerOne.isAI = true;
+            }
+            else{
+                playerTwo.isAI = true;
+            }
+        }
+        if(oForm.elements["difficulty"].value == "Medium"){
+            settings.aiDifficulty = "Medium"
+        }
+        else if(oForm.elements["difficulty"].value == "Hard"){
+            settings.aiDifficulty = "Hard"
+        }
+
+        // Check if an AI has been selected to play
+        // If so, go ahead and have them make the first move if they are "X"
+        if(settings.playerOpponent == "AI" && settings.playerChoice == "O"){
+            Gameboard.aiMove();
+        }
+    
+    }
+    
+    closeButton.addEventListener('click', closeModal);
+    // Open Modal on page load
+    openModal();
+
+    return{playerChoice, playerOpponent, aiDifficulty}
+
 })();
 
 // Module for the "flow" or game display.
@@ -153,30 +227,18 @@ const displayController = (() => {
 const playerFactory = (name, shape) => {
     let playerTurn = false;
     let hasWon = false;
+    let isAI = false;
     if(name == 1){
         playerTurn = true;
     }
-    return {name, shape, playerTurn, hasWon};
+    // If this is not the playerCharacter and AI has been selected, set isAI to true.
+    if(settings.playerOpponent == "AI" && settings.playerChoice != shape){
+        isAI = true;
+    }
+    return {name, shape, playerTurn, hasWon, isAI};
 };
 
 // Initialize the players and the display.
 const playerOne = playerFactory(1,"X");
 const playerTwo = playerFactory(2,"O");
 displayController.initializeDisplay();
-
-// TODO: make the "difficulty" be selectable once "AI" is selected.
-// set selected options to variables in the code.
-
-const openButton = document.getElementById('trigger-modal');
-const closeButton = document.getElementById('close-modal');
-
-function toggleModal() {
-  const modalDiv = document.querySelector('.popup-modal');
-  modalDiv.classList.toggle('show');
-}
-
-closeButton.addEventListener('click', toggleModal);
-
-
-// Open Modal on page load
-toggleModal();
