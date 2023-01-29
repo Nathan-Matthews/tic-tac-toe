@@ -32,7 +32,10 @@ const Gameboard = (() => {
         _turnCounter++;
         // If it is BOTH the AI and the AI's turn, then do an aiMove
         if((playerOne.playerTurn && playerOne.isAI || playerTwo.playerTurn && playerTwo.isAI)){
-            aiMove();
+            if(_turnCounter < 9){
+                aiMove();
+            }
+            
         }
         // Start checking for wins only after the 5th turn has been played.
         if(_turnCounter >= 5){
@@ -82,14 +85,14 @@ const Gameboard = (() => {
                 _hasWon(gameboard[0]);
             }
         }
-        // Check frontslash diagonal wins
+        // Check forward-slash diagonal wins
         if(gameboard[2] == gameboard[4] && gameboard[2] == gameboard[6]){
             if(gameboard[2] != ""){
                 _hasWon(gameboard[2]);
             }
         }
         // After the 9th turn and after checking for a win, it must be a tie.
-        if(_turnCounter >= 9){
+        if(_turnCounter >= 9 && !(playerOne.hasWon || playerTwo.hasWon)){
             document.querySelector(".header").textContent = "There has been a tie."
         }
     }
@@ -103,6 +106,7 @@ const Gameboard = (() => {
         else{
             playerTwo.hasWon = true;
         }
+
     }
     
     return {gameboard, gameboardMove, aiMove};
@@ -128,7 +132,7 @@ const settings = (() => {
         modalDiv.classList.toggle('show');
     
         // Select the form
-        oForm = document.forms[0];
+        let oForm = document.forms[0];
         if(oForm.elements["shape"].value == "O"){
             settings.playerChoice = "O"
         }
@@ -184,7 +188,7 @@ const displayController = (() => {
         // Event listener for cell clicks aka "moves"
         // Once a cell is clicked, send that cell number and record the player shape.
         document.querySelectorAll('.cell').forEach(item => {
-            item.addEventListener('click', event => {
+            item.addEventListener('click', () => {
                 Gameboard.gameboardMove(item.className.slice(-1));
             })
           })
