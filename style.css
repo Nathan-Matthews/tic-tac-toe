@@ -80,8 +80,14 @@
     opacity: 30%;
 }
 
+.reset {
+    font-size: xx-large;
+    align-self: center;
+    justify-self: center;
+}
+
 .footer {
-    grid-row: 3 / 4;
+    grid-row: 4 / 5;
     display: flex;
     justify-content: center;
     margin-top: auto;
